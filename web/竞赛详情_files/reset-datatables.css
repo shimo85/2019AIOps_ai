@@ -1,0 +1,107 @@
+@charset "UTF-8";
+/*重置datatable样式*/
+.rest-table {
+  border: 1px solid #e6e6e6; }
+  .rest-table a {
+    outline: none; }
+  .rest-table .dataTables_filter {
+    padding: 10px;
+    padding-right: 15px; }
+    .rest-table .dataTables_filter input {
+      outline: none; }
+  .rest-table table.dataTable {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important; }
+  .rest-table table > tbody {
+    color: #888888; }
+    .rest-table table > tbody > tr > td {
+      padding: 10px;
+      padding-left: 20px; }
+      .rest-table table > tbody > tr > td a.no-publish-btn img {
+        padding-right: 6px;
+        vertical-align: middle;
+        margin-top: -1px; }
+      .rest-table table > tbody > tr > td .parting-line {
+        color: #e6e6e6;
+        padding: 0 15px; }
+    .rest-table table > tbody > tr > th {
+      padding: 10px;
+      padding-left: 20px; }
+  .rest-table table > tfoot > tr > td {
+    padding: 10px;
+    padding-left: 15px; }
+  .rest-table table > tfoot > tr > th {
+    padding: 10px;
+    padding-left: 15px; }
+  .rest-table table thead > tr > td {
+    padding: 10px;
+    padding-left: 15px; }
+  .rest-table table thead > tr > th {
+    padding: 10px;
+    padding-left: 20px; }
+  .rest-table .table-bordered {
+    border: none;
+    border-bottom: none; }
+    .rest-table .table-bordered > tbody {
+      color: #888888; }
+      .rest-table .table-bordered > tbody > tr > td {
+        border: none;
+        border-bottom: 1px solid #e6e6e6; }
+      .rest-table .table-bordered > tbody > tr > th {
+        border: none;
+        border-bottom: 1px solid #e6e6e6; }
+    .rest-table .table-bordered > tfoot > tr > td {
+      border: none;
+      border-bottom: 1px solid #e6e6e6; }
+    .rest-table .table-bordered > tfoot > tr > th {
+      border: none;
+      border-bottom: 1px solid #e6e6e6; }
+    .rest-table .table-bordered thead > tr > td {
+      border: none;
+      border-bottom: 1px solid #e6e6e6; }
+    .rest-table .table-bordered thead > tr > th {
+      border: none;
+      background-color: #fafafa;
+      border-top: 1px solid #e6e6e6 !important; }
+  .rest-table .pagination > .active a {
+    background-color: #20a0ff;
+    color: #fff; }
+  .rest-table .pagination > .active > span {
+    background-color: #20a0ff;
+    color: #fff; }
+  .rest-table .pagination > .active > a:hover {
+    background-color: #20a0ff;
+    color: #fff; }
+  .rest-table .pagination > .active > a:focus {
+    background-color: #20a0ff;
+    color: #fff; }
+  .rest-table .pagination > .active > span:focus {
+    background-color: #20a0ff;
+    color: #fff; }
+  .rest-table .pagination li a {
+    color: #878996;
+    border: 1px solid #e6e6e6; }
+  .rest-table .pagination lispan {
+    color: #878996;
+    border: 1px solid #e6e6e6; }
+  .rest-table div.dataTables_paginate {
+    background: #fafafa;
+    padding-right: 10px; }
+    .rest-table div.dataTables_paginate ul.pagination {
+      margin: 8px 0; }
+  .rest-table .dataTables_paginate .pagination li a {
+    line-height: 18px; }
+  .rest-table .dataTables_paginate .pagination lispan {
+    line-height: 18px; }
+  @media (min-width: 768px) {
+    .rest-table .col-sm-5 {
+      width: 0; } }
+  @media (min-width: 768px) {
+    .rest-table .col-sm-7 {
+      width: 100%; } }
+  .rest-table .table-hover > tbody > tr:hover {
+    background: #fff; }
+
+/*竞赛表格样式覆盖*/
+.competition-table .table-bordered thead > tr > th {
+  border-bottom: 1px solid #e6e6e6 !important; }

@@ -1,0 +1,214 @@
+@charset "UTF-8";
+/*!
+ *  bkDialog v1.0
+ *  author：蓝鲸智云
+ *  Copyright (c) 2012-2017 Tencent BlueKing. All Rights Reserved.
+ */
+* {
+  box-sizing: border-box; }
+
+.bk-dialog {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  font-family: "Microsoft YaHei",Helvetica,Arial,sans-serif; }
+  .bk-dialog-wrapper {
+    display: table;
+    width: 100%;
+    height: 100%; }
+  .bk-dialog-position {
+    display: table-cell;
+    vertical-align: middle; }
+  .bk-dialog-style {
+    position: relative;
+    width: 400px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 7px 3px rgba(0, 0, 0, 0.1); }
+  .bk-dialog-tool {
+    position: absolute;
+    top: 0;
+    right: 0; }
+  .bk-dialog-close {
+    display: block;
+    width: 27px;
+    height: 27px;
+    margin: 4px 4px 0 0;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-image: url("../../images/dataset/close.png");
+    background-size: 11px 11px;
+    background-position: 50% 50%;
+    cursor: pointer; }
+    .bk-dialog-close:hover {
+      background-color: #f3f3f3; }
+  .bk-dialog-header {
+    padding: 40px 30px 10px;
+    color: #333;
+    font-size: 22px; }
+  .bk-dialog-body {
+    padding: 15px 65px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5; }
+  .bk-dialog-footer {
+    padding: 20px 65px 40px;
+    font-size: 0; }
+    .bk-dialog-footer.bk-dialog-outer {
+      height: 60px;
+      padding: 0 10px 0 0;
+      border-top: 1px solid #e5e5e5;
+      background-color: #fafafa;
+      text-align: right; }
+      .bk-dialog-footer.bk-dialog-outer button {
+        width: 72px;
+        height: 36px;
+        min-width: 72px;
+        margin-right: 10px;
+        margin-top: 12px; }
+        .bk-dialog-footer.bk-dialog-outer button.bk-dialog-btn-cancel {
+          margin-left: 0;
+          background-color: #fff; }
+  .bk-dialog-title {
+    text-align: center;
+    font-size: 22px;
+    color: #333; }
+  .bk-dialog-subtitle {
+    color: #666; }
+  .bk-dialog-default-status {
+    padding: 40px 0; }
+    .bk-dialog-default-status.bk-dialog-warning-body {
+      padding-bottom: 15px; }
+    .bk-dialog-default-status ~ .bk-dialog-footer {
+      padding-top: 0; }
+    .bk-dialog-default-status .bk-dialog-mark {
+      display: block;
+      margin: 0 auto; }
+      .bk-dialog-default-status .bk-dialog-mark.bk-dialog-loading {
+        width: 58px;
+        height: 58px;
+        line-height: 58px;
+        font-size: 30px;
+        border-radius: 50%;
+        animation: loading linear 1s infinite; }
+      .bk-dialog-default-status .bk-dialog-mark.bk-dialog-warning, .bk-dialog-default-status .bk-dialog-mark.bk-dialog-error, .bk-dialog-default-status .bk-dialog-mark.bk-dialog-success {
+        width: 58px;
+        height: 58px;
+        line-height: 58px;
+        font-size: 30px;
+        color: #fff;
+        border-radius: 50%; }
+      .bk-dialog-default-status .bk-dialog-mark.bk-dialog-warning {
+        background-color: #ffc200; }
+      .bk-dialog-default-status .bk-dialog-mark.bk-dialog-error {
+        background-color: #ff5454; }
+      .bk-dialog-default-status .bk-dialog-mark.bk-dialog-success {
+        background-color: #5bd18a; }
+    .bk-dialog-default-status .bk-dialog-title {
+      margin-top: 30px; }
+    .bk-dialog-default-status .bk-dialog-subtitle {
+      margin-top: 16px; }
+  .bk-dialog-error-text {
+    color: #ff7979; }
+  .bk-dialog-primary-text {
+    color: #6793ee; }
+  .bk-dialog-btn {
+    width: calc(50% - 10px);
+    height: 36px;
+    box-shadow: none;
+    outline: none;
+    border-radius: 2px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    cursor: pointer;
+    font-size: 16px; }
+    .bk-dialog-btn:hover {
+      background-color: #fafafa;
+      opacity: .8; }
+    .bk-dialog-btn.bk-btn-info {
+      color: #fff;
+      background-color: #88c3ff;
+      border-color: #88c3ff; }
+      .bk-dialog-btn.bk-btn-info:hover {
+        background-color: #7ab9fa;
+        border-color: #7ab9fa; }
+    .bk-dialog-btn.bk-btn-primary {
+      color: #fff;
+      background-color: #57a3f1;
+      border-color: #57a3f1; }
+      .bk-dialog-btn.bk-btn-primary:hover {
+        background-color: #4491e1;
+        border-color: #4491e1; }
+    .bk-dialog-btn.bk-btn-danger {
+      color: #fff;
+      background-color: #ff7979;
+      border-color: #ff7979; }
+      .bk-dialog-btn.bk-btn-danger:hover {
+        background-color: #fd6154;
+        border-color: #fd6154; }
+    .bk-dialog-btn.bk-btn-success {
+      color: #fff;
+      background-color: #5bd18b;
+      border-color: #5bd18b; }
+      .bk-dialog-btn.bk-btn-success:hover {
+        background-color: #33c16f;
+        border-color: #33c16f; }
+    .bk-dialog-btn.bk-btn-warning {
+      color: #fff;
+      background-color: #ffc349;
+      border-color: #ffc349; }
+      .bk-dialog-btn.bk-btn-warning:hover {
+        background-color: #ffb726;
+        border-color: #ffb726; }
+    .bk-dialog-btn-confirm {
+      margin-right: 10px;
+      color: #fff; }
+    .bk-dialog-btn-cancel {
+      margin-left: 10px;
+      color: #666; }
+  .bk-dialog-row {
+    text-align: center; }
+  .bk-dialog h1 {
+    margin: 0;
+    padding: 0;
+    font-weight: normal; }
+  .bk-dialog h2 {
+    margin: 0;
+    padding: 0;
+    font-weight: normal; }
+  .bk-dialog h3 {
+    margin: 0;
+    padding: 0;
+    font-weight: normal; }
+  .bk-dialog h4 {
+    margin: 0;
+    padding: 0;
+    font-weight: normal; }
+  .bk-dialog h5 {
+    margin: 0;
+    padding: 0;
+    font-weight: normal; }
+  .bk-dialog h6 {
+    margin: 0;
+    padding: 0;
+    font-weight: normal; }
+  .bk-dialog p {
+    margin: 0; }
+  .bk-dialog a {
+    text-decoration: none; }
+  .bk-dialog .hidden {
+    display: none; }
+
+@keyframes loading {
+  from {
+    transform: rotate(0); }
+  to {
+    transform: rotate(360deg); } }
+
+/*# sourceMappingURL=bkDialog.css.map */
