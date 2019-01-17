@@ -20,16 +20,24 @@ def prediction_by_different_classifier(df):
         print 'Error: %s' % ex.message
 
 
+def append_prediction(df, pre):
+    df['prediction'] = pre
+    # o_df = df.append(pd.DataFrame({'prediction': pre}))
+    df.to_csv(pth.join('rundata', 't_value_output', 't_values_with_pre.csv'), index=0)
+    pass
+
+
 if __name__ == '__main__':
     f_path = pth.join('rundata', 't_value_output', 't_values.csv')
     df = pd.read_csv(f_path, encoding='utf-8')
 
-    plt.figure()
+    pre_values = prediction_by_different_classifier(df)
 
-    plt.plot(df['timestamp'], df['t_value'])
+    # plt.figure()
+    # plt.plot(df['timestamp'], df['t_value'])
+    # plt.plot(df['timestamp'], pre_values, label='prediction')
+    # plt.legend()
+    # plt.show()
 
-    plt.plot(df['timestamp'], prediction_by_different_classifier(df), label='prediction')
+    append_prediction(df, pre_values)
 
-    plt.legend()
-
-    plt.show()
