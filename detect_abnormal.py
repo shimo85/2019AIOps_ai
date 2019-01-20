@@ -10,8 +10,11 @@ if __name__ == '__main__':
     max_dev_rate = .15
     df['label'] = df.apply(lambda i: 1 if i['dev_r'] > max_dev_rate else 0, axis=1)
     # print df.head(100)
-    print df['label'].count()
-    print df['label'].sum()
+    print 'count: {}'.format(df['label'].count())
+    print 'sum: {}'.format(df['label'].sum())
+
     df.to_csv(pth.join('rundata', 't_value_output', 't_values_with_pre_dev_lable.csv'), index=0)
+
+    df.loc[df['label'] == 1, ['timestamp']].to_csv(pth.join('rundata', 'abnormal_timestamp.csv'), index=None)
 
     pass
