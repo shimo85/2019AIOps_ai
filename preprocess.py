@@ -57,20 +57,36 @@ def draw_check_view():
 
 
 def desc_check_view():
+    print 'description of attributes'
+    '''
+    csv format:
+    attri, count_max, count_min, count_mean, item_set, item_set_count
+    
+    '''
     f_pth = pth.join('rundata', 'check_view.csv')
     df = pd.read_csv(f_pth)
+    data_map = {'attri': [],
+                'count_max': [], 'count_min': [], 'count_mean': [],
+                'item_set': [], 'item_set_count': []
+                }
     for attri in ORIGIN_ATTRIS:
-        print '{0:-^20}'.format(attri)
+        data_map['attri'].append(attri)
+        # print '{0:-^20}'.format(attri)
         attri_count_temp = '{}_item_count'.format(attri)
-        print 'max: {}'.format(df[attri_count_temp].max())
-        print 'min: {}'.format(df[attri_count_temp].min())
-        print 'mean: {}'.format(df[attri_count_temp].mean())
+        data_map['count_max'].append(df[attri_count_temp].max())
+        # print 'max: {}'.format(df[attri_count_temp].max())
+        data_map['count_min'].append(df[attri_count_temp].min())
+        # print 'min: {}'.format(df[attri_count_temp].min())
+        data_map['count_mean'].append(df[attri_count_temp].mean())
+        # print 'mean: {}'.format(df[attri_count_temp].mean())
         item_set = set()
         for items in df['{}_items'.format(attri)]:
             for item in items.split('#'):
                 item_set.add(item)
-        print 'item count: {}'.format(len(item_set))
-    pass
+        data_map['item_set'].append('#'.join(item_set))
+        data_map['item_set_count'].append(len(item_set))
+        # print 'item count: {}'.format(len(item_set))
+    pd.DataFrame(data_map).to_csv(pth.join('rundata', 'check_view_model.csv'), index=0)
 
 
 def col_total_values(origin_data):
@@ -87,14 +103,43 @@ def col_total_values(origin_data):
     t_df.to_csv(pth.join('rundata', 't_value_output', 't_values.csv'), columns=['timestamp', 't_value'], index=0)
 
 
+def col_l1_values(origin_data):
+    print 'start collect level-1 data'
+    '''
+    output level-1 attribute values to csv
+    
+    directory contains n attributes csv file
+    
+    csv format:
+    timestamp, attri_1_item_1_value, attri_1_item_2_value, ...
+    
+    '''
+    out_pth = pth.join('rundata', 'l1_value_output')
+    utl.reset_dir(out_pth)
+
+    data_map = {}
+    for attri in ORIGIN_ATTRIS:
+        data_map[attri] = {}
+        pass
+
+    for timestamp_f in os.listdir(origin_data):
+        ts = utl.transfer_file_name_to_timestamp(timestamp_f)
+        df = pd.read_csv(pth.join(origin_data, timestamp_f), encoding='utf-8', header=None, names=ORIGIN_COLUMN)
+
+        data_map['timestamp'].append(ts)
+        data_map['t_value'].append(df['value'].sum())
+
+    pass
+
+
 if __name__ == '__main__':
     origin_f_path = pth.join('rundata', '2019AIOps_data')
     print 'read origin data from ', origin_f_path
-    # features_out = transfer_features(origin_f_path)
-    # print 'transfer features to ', features_out
+
     # col_total_values(origin_f_path)
+
     # check_features(origin_f_path)
     # draw_check_view()
     desc_check_view()
 
-    pass
+    # col_l1_values(origin_f_path)
