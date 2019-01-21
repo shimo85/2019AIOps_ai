@@ -118,16 +118,26 @@ def col_l1_values(origin_data):
     utl.reset_dir(out_pth)
 
     data_map = {}
+    # attri_df = pd.read_csv(pth.join('rundata', 'check_view_model.csv'), index_col='attri')
+    # print attri_df.head()
     for attri in ORIGIN_ATTRIS:
-        data_map[attri] = {}
-        pass
+        # item_set = attri_df.loc[attri]['item_set']
+        # data_map[attri] = pd.DataFrame(columns=item_set.split('#'))
+        data_map[attri] = pd.DataFrame()
 
     for timestamp_f in os.listdir(origin_data):
         ts = utl.transfer_file_name_to_timestamp(timestamp_f)
         df = pd.read_csv(pth.join(origin_data, timestamp_f), encoding='utf-8', header=None, names=ORIGIN_COLUMN)
 
-        data_map['timestamp'].append(ts)
-        data_map['t_value'].append(df['value'].sum())
+        for attri in ORIGIN_ATTRIS:
+            df_gb = df.groupby(by=attri).agg({'value': sum})
+            df_gb_dict = df_gb.to_dict()['value']
+            df_gb_dict['timestamp'] = ts
+            data_map[attri] = data_map[attri].append(df_gb_dict, ignore_index=True)
+
+    for attri in ORIGIN_ATTRIS:
+        data_map[attri] = data_map[attri].sort_values(by='timestamp')
+        data_map[attri].to_csv(pth.join(out_pth, '{}_values.csv'.format(attri)), index=0)
 
     pass
 
@@ -140,6 +150,6 @@ if __name__ == '__main__':
 
     # check_features(origin_f_path)
     # draw_check_view()
-    desc_check_view()
+    # desc_check_view()
 
-    # col_l1_values(origin_f_path)
+    col_l1_values(origin_f_path)
