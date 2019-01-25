@@ -5,14 +5,14 @@ from conf import *
 
 
 def cal_dev_rate(pre, val):
-    return np.float32(np.abs(pre - val) / np.float32(pre))
+    return np.float32((pre - val) / np.float64(pre))
 
 
 def detect_t_value(max_dev_rate=.15):
     in_file = pth.join('rundata', 't_value_output', 't_values_with_pre.csv')
     df = pd.read_csv(in_file, encoding='utf-8')
     df['dev_r'] = df.apply(lambda i: cal_dev_rate(i['prediction'], i['t_value']), axis=1)
-    df['label'] = df.apply(lambda i: 1 if i['dev_r'] > max_dev_rate else 0, axis=1)
+    df['label'] = df.apply(lambda i: 1 if np.abs(i['dev_r']) > max_dev_rate else 0, axis=1)
     # print df.head(100)
     print 'count: {}'.format(df['label'].count())
     print 'sum: {}'.format(df['label'].sum())
@@ -38,5 +38,5 @@ def detect_l1_value():
 
 
 if __name__ == '__main__':
-    # detect_t_value()
+    detect_t_value()
     detect_l1_value()
