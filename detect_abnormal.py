@@ -8,7 +8,8 @@ def cal_dev_rate(pre, val):
     return np.float32((pre - val) / np.float64(pre))
 
 
-def detect_t_value(max_dev_rate=.15):
+def detect_t_value(max_dev_rate=.2):
+    print 'max dev rate: {}'.format(max_dev_rate)
     in_file = pth.join('rundata', 't_value_output', 't_values_with_pre.csv')
     df = pd.read_csv(in_file, encoding='utf-8')
     df['dev_r'] = df.apply(lambda i: cal_dev_rate(i['prediction'], i['t_value']), axis=1)
@@ -16,6 +17,7 @@ def detect_t_value(max_dev_rate=.15):
     # print df.head(100)
     print 'count: {}'.format(df['label'].count())
     print 'sum: {}'.format(df['label'].sum())
+    print 'rate: {}'.format(np.float32(df['label'].sum() / np.float64(df['label'].count())))
     df.to_csv(pth.join('rundata', 't_value_output', 't_values_with_pre_dev_lable.csv'), index=0)
     df.loc[df['label'] == 1, ['timestamp']].to_csv(pth.join('rundata', 'abnormal_timestamp.csv'), index=None)
     pass
@@ -37,6 +39,15 @@ def detect_l1_value():
     pass
 
 
+def get_l1_abnormal_set():
+    t_values_with_pre_dev_lable_df = pd.read_csv(
+        pth.join('rundata', 't_value_output', 't_values_with_pre_dev_lable.csv'))
+
+
+    pass
+
+
 if __name__ == '__main__':
-    detect_t_value()
-    detect_l1_value()
+    # detect_t_value()
+    # detect_l1_value()
+    get_l1_abnormal_set()

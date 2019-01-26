@@ -46,11 +46,26 @@ def show_check_view(save_path=None, is_show=False):
     pass
 
 
+def show_t_value_abnormal(save_path=None, is_show=False):
+    df = pd.read_csv(pth.join('rundata', 't_value_output', 't_values_with_pre_dev_lable.csv'))
+    abnrm_df = df[0 <> df['label']]
+    print abnrm_df.count()
+    plt.figure()
+    plt.scatter(abnrm_df['timestamp'], abnrm_df['dev_r'])
+    plt.legend()
+    if save_path:
+        plt.savefig(save_path)
+    if is_show:
+        plt.show()
+    pass
+
+
 if __name__ == '__main__':
     # show_t_values(save_path=pth.join('datapic', 't_values.png'))
     # show_t_values(is_show_pre=True, save_path=pth.join('datapic', 't_values_pre.png'))
+    show_t_value_abnormal(save_path=pth.join('datapic', 't_values_dev.png'))
 
-    show_check_view_count(save_path=pth.join('datapic', 'check_view_count.png'))
-    show_check_view(save_path=pth.join('datapic', 'check_view.png'))
+    # show_check_view_count(save_path=pth.join('datapic', 'check_view_count.png'))
+    # show_check_view(save_path=pth.join('datapic', 'check_view.png'))
 
     pass
