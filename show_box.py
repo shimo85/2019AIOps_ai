@@ -75,6 +75,21 @@ def show_l1_abnrm(save_path=None, is_show=False):
     pass
 
 
+def show_check_view_model(save_path=None, is_show=False):
+    df = pd.read_csv(pth.join('rundata', 'check_view_model.csv'))
+    df = df.sort_values(by='item_set_count').reset_index()
+    # print df.head()
+    plt.figure()
+    plt.barh(df.index, df['item_set_count'])
+    plt.yticks(df.index, df['attri'])
+    plt.legend()
+    if save_path:
+        plt.savefig(save_path)
+    if is_show:
+        plt.show()
+    pass
+
+
 if __name__ == '__main__':
     # show_t_values(save_path=pth.join('datapic', 't_values.png'))
     # show_t_values(is_show_pre=True, save_path=pth.join('datapic', 't_values_pre.png'))
@@ -82,7 +97,8 @@ if __name__ == '__main__':
 
     # show_check_view_count(save_path=pth.join('datapic', 'check_view_count.png'))
     # show_check_view(save_path=pth.join('datapic', 'check_view.png'))
+    show_check_view_model(save_path=pth.join('datapic', 'check_view_model.png'))
 
-    show_l1_abnrm(save_path=pth.join('datapic', 'l1_abnormal.png'))
+    # show_l1_abnrm(save_path=pth.join('datapic', 'l1_abnormal.png'))
 
     pass
