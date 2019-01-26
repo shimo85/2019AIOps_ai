@@ -60,12 +60,29 @@ def show_t_value_abnormal(save_path=None, is_show=False):
     pass
 
 
+def show_l1_abnrm(save_path=None, is_show=False):
+    df = pd.read_csv(pth.join('rundata', 'l1_abnormal.csv'))
+    plt.figure()
+    for i in ORIGIN_ATTRIS:
+        attri_label = '{}_abnrm_items_count'.format(i)
+        attr_df = df[df[attri_label] > 0]
+        plt.scatter(attr_df['timestamp'], attr_df[attri_label], label=i)
+    plt.legend()
+    if save_path:
+        plt.savefig(save_path)
+    if is_show:
+        plt.show()
+    pass
+
+
 if __name__ == '__main__':
     # show_t_values(save_path=pth.join('datapic', 't_values.png'))
     # show_t_values(is_show_pre=True, save_path=pth.join('datapic', 't_values_pre.png'))
-    show_t_value_abnormal(save_path=pth.join('datapic', 't_values_dev.png'))
+    # show_t_value_abnormal(save_path=pth.join('datapic', 't_values_dev.png'))
 
     # show_check_view_count(save_path=pth.join('datapic', 'check_view_count.png'))
     # show_check_view(save_path=pth.join('datapic', 'check_view.png'))
+
+    show_l1_abnrm(save_path=pth.join('datapic', 'l1_abnormal.png'))
 
     pass
