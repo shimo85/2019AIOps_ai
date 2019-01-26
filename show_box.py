@@ -97,8 +97,8 @@ if __name__ == '__main__':
 
     # show_check_view_count(save_path=pth.join('datapic', 'check_view_count.png'))
     # show_check_view(save_path=pth.join('datapic', 'check_view.png'))
-    show_check_view_model(save_path=pth.join('datapic', 'check_view_model.png'))
+    # show_check_view_model(save_path=pth.join('datapic', 'check_view_model.png'))
 
-    # show_l1_abnrm(save_path=pth.join('datapic', 'l1_abnormal.png'))
+    show_l1_abnrm(save_path=pth.join('datapic', 'l1_abnormal.png'))
 
     pass
