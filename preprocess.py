@@ -4,9 +4,6 @@ import pandas as pd
 import my_util as utl
 from conf import *
 
-print 'attributes: {}'.format(str(ORIGIN_ATTRIS))
-print 'columns: {}'.format(str(ORIGIN_COLUMN))
-
 
 def check_features(origin_data):
     print 'check features'
@@ -89,7 +86,7 @@ def desc_check_view():
     pd.DataFrame(data_map).to_csv(pth.join('rundata', 'check_view_model.csv'), index=0)
 
 
-def col_total_values(origin_data):
+def col_total_values(origin_data, output_pth=pth.join('rundata', 't_value_output')):
     print 'start collect total values'
     data_map = {'timestamp': [], 't_value': []}
     for timestamp_f in os.listdir(origin_data):
@@ -100,7 +97,8 @@ def col_total_values(origin_data):
     t_df = pd.DataFrame(data=data_map).sort_values(by='timestamp')
     # print t_df.head()
     # return ret_list
-    t_df.to_csv(pth.join('rundata', 't_value_output', 't_values.csv'), columns=['timestamp', 't_value'], index=0)
+    t_value_f_pth = pth.join(output_pth, 't_values.csv')
+    t_df.to_csv(t_value_f_pth, columns=['timestamp', 't_value'], index=0)
 
 
 def col_l1_values(origin_data):

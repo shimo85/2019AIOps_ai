@@ -21,13 +21,6 @@ def prediction_by_different_classifier(df):
         print 'Error: %s' % ex.message
 
 
-def append_prediction(df, pre):
-    df['prediction'] = pre
-    # o_df = df.append(pd.DataFrame({'prediction': pre}))
-    df.to_csv(pth.join('rundata', 't_value_output', 't_values_with_pre.csv'), index=0)
-    pass
-
-
 def prediction_l1_values():
     f_path = pth.join('rundata', 'l1_value_output')
     for attri in ORIGIN_ATTRIS:
@@ -47,11 +40,11 @@ def prediction_l1_values():
     pass
 
 
-def prediction_t_values():
-    f_path = pth.join('rundata', 't_value_output', 't_values.csv')
-    df = pd.read_csv(f_path, encoding='utf-8')
-    pre_values = prediction_by_different_classifier(df)
-    append_prediction(df, pre_values)
+def prediction_t_values(f_pth=pth.join('rundata', 't_value_output')):
+    print 'do prediction t value in {}'.format(f_pth)
+    df = pd.read_csv(pth.join(f_pth, 't_values.csv'), encoding='utf-8')
+    df['prediction'] = prediction_by_different_classifier(df)
+    df.to_csv(pth.join(f_pth, 't_values_with_pre.csv'), index=0)
 
 
 def cluster_abnormal_ts():

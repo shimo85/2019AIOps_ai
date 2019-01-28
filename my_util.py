@@ -1,4 +1,5 @@
 import os
+import shutil
 
 
 def transfer_file_name_to_timestamp(f_name):
@@ -17,5 +18,5 @@ def del_file(path):
 def reset_dir(f_path):
     if os.path.exists(f_path):
         del_file(f_path)
-    else:
-        os.mkdir(f_path)
+        shutil.rmtree(f_path)
+    os.makedirs(f_path)
