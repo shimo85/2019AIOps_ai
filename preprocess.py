@@ -143,7 +143,7 @@ def col_l1_values(origin_data):
 
 
 if __name__ == '__main__':
-    origin_f_path = pth.join('rundata', '2019AIOps_data')
+    origin_f_path = pth.join('rundata', 'origin_data')
     print 'read origin data from ', origin_f_path
 
     # col_total_values(origin_f_path)
