@@ -5,18 +5,23 @@ from sklearn.cluster import KMeans
 from conf import *
 
 
-def prediction_by_different_classifier(df):
+def prediction_by_different_classifier(df, abnrm_ts_f_pth=None):
     clf = RandomForestClassifier(max_depth=15, n_estimators=10, max_features=1)
     # preprocess dataset, split into training and test part
     r_count, _ = df.shape
     X_train = df['timestamp'].values.reshape(-1, 1)
+    # X_train = df.index.values.reshape(-1, 1)
     y_train = df['t_value'].values
     try:
         # tsc = time.time()
         clf.fit(X_train, y_train)
         # trc = time.time()
-        return clf.predict(X_train)
-        # tac = time.time()
+        if not abnrm_ts_f_pth:
+            return clf.predict(X_train)
+        else:
+            abnrm_ts_df = pd.read_csv(abnrm_ts_f_pth)
+            return clf.predict(abnrm_ts_df['timestamp'].values.reshape(-1, 1))
+            # tac = time.time()
     except Exception, ex:
         print 'Error: %s' % ex.message
 
@@ -40,11 +45,15 @@ def prediction_l1_values():
     pass
 
 
-def prediction_t_values(f_pth=pth.join('rundata', 't_value_output')):
+def prediction_t_values(f_pth=pth.join('rundata', 't_value_output'), abnrm_ts_f_pth=None):
     print 'do prediction t value in {}'.format(f_pth)
     df = pd.read_csv(pth.join(f_pth, 't_values.csv'), encoding='utf-8')
-    df['prediction'] = prediction_by_different_classifier(df)
-    df.to_csv(pth.join(f_pth, 't_values_with_pre.csv'), index=0)
+    # df = pd.read_csv(pth.join(f_pth, 't_values.csv'), encoding='utf-8', index_col='timestamp')
+    ret_df = df
+    if abnrm_ts_f_pth:
+        ret_df = df[df['timestamp'].isin(pd.read_csv(abnrm_ts_f_pth)['timestamp'].values)]
+    ret_df['prediction'] = prediction_by_different_classifier(df, abnrm_ts_f_pth)
+    ret_df.to_csv(pth.join(f_pth, 't_values_with_pre.csv'), index=0)
 
 
 def cluster_abnormal_ts():
