@@ -2,6 +2,7 @@ import os
 import os.path as pth
 import pandas as pd
 import my_util as utl
+from statsmodels.tsa.stattools import adfuller
 from conf import *
 
 
@@ -140,6 +141,37 @@ def col_l1_values(origin_data):
     pass
 
 
+def l1_adf_detector(origin_data):
+    print 'detect adf from: {}'.format(origin_data)
+    '''
+    detect l1 values' adf, and output to adf_result.csv
+    attri_item, adf, pvalue, critical_value_1, critical_value_5, critical_value_10, label
+    '''
+    ret_df = pd.DataFrame()
+    for attri in ORIGIN_ATTRIS:
+        df = pd.read_csv(pth.join(origin_data, '{}_values.csv'.format(attri)), index_col='timestamp')
+        for item in df.columns:
+            r_dict = dict()
+            r_dict['attri_item'] = '{}_{}'.format(attri, item)
+            try:
+                _series = pd.Series(data=df[item].dropna())
+                dta = _series.diff(1)[1:]
+                adf, pvalue, _, _, c_v_dict, _ = adfuller(dta)
+                r_dict['adf'] = adf
+                r_dict['pvalue'] = pvalue
+                r_dict['critical_value_1'] = c_v_dict['1%']
+                r_dict['critical_value_5'] = c_v_dict['5%']
+                r_dict['critical_value_10'] = c_v_dict['10%']
+                r_dict['label'] = 1 if (adf < c_v_dict['1%'] and adf < c_v_dict['5%'] and adf < c_v_dict['10%']) else 0
+            except Exception:
+                r_dict['label'] = 0
+            ret_df = ret_df.append(pd.Series(r_dict), ignore_index=True)
+    print ret_df.head()
+    ret_df.to_csv(pth.join(origin_data, 'adf_result.csv'), index=0)
+
+    pass
+
+
 if __name__ == '__main__':
     origin_f_path = pth.join('rundata', 'origin_data')
     print 'read origin data from ', origin_f_path
@@ -150,4 +182,6 @@ if __name__ == '__main__':
     # draw_check_view()
     # desc_check_view()
 
-    col_l1_values(origin_f_path)
+    # col_l1_values(origin_f_path)
+
+    l1_adf_detector(pth.join('rundata', 'l1_value_output'))
