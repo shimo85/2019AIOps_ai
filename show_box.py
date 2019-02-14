@@ -93,12 +93,12 @@ def show_check_view_model(save_path=None, is_show=False):
 if __name__ == '__main__':
     # show_t_values(save_path=pth.join('datapic', 't_values.png'))
     # show_t_values(is_show_pre=True, save_path=pth.join('datapic', 't_values_pre.png'))
-    # show_t_value_abnormal(save_path=pth.join('datapic', 't_values_dev.png'))
+    show_t_value_abnormal(save_path=pth.join('datapic', 't_values_dev.png'))
 
     # show_check_view_count(save_path=pth.join('datapic', 'check_view_count.png'))
     # show_check_view(save_path=pth.join('datapic', 'check_view.png'))
     # show_check_view_model(save_path=pth.join('datapic', 'check_view_model.png'))
 
-    show_l1_abnrm(save_path=pth.join('datapic', 'l1_abnormal.png'))
+    # show_l1_abnrm(save_path=pth.join('datapic', 'l1_abnormal.png'))
 
     pass

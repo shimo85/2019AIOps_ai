@@ -176,7 +176,7 @@ if __name__ == '__main__':
     origin_f_path = pth.join('rundata', 'origin_data')
     print 'read origin data from ', origin_f_path
 
-    # col_total_values(origin_f_path)
+    col_total_values(origin_f_path)
 
     # check_features(origin_f_path)
     # draw_check_view()
@@ -184,4 +184,4 @@ if __name__ == '__main__':
 
     # col_l1_values(origin_f_path)
 
-    l1_adf_detector(pth.join('rundata', 'l1_value_output'))
+    # l1_adf_detector(pth.join('rundata', 'l1_value_output'))

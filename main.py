@@ -2,6 +2,7 @@ import os.path as pth
 import my_util as utl
 import preprocess as preprc
 import prediction as pdc
+import detect_abnormal as deabnrm
 
 if __name__ == '__main__':
     origin_f_pth = pth.join('rundata', 'origin_data')
@@ -11,12 +12,11 @@ if __name__ == '__main__':
     # utl.reset_dir(temp_pth)
 
     t_output_pth = pth.join(temp_pth, 't_value_output')
-    utl.reset_dir(t_output_pth)
-    preprc.col_total_values(origin_f_pth, output_pth=t_output_pth)
+    # utl.reset_dir(t_output_pth)
 
-    pdc.prediction_t_values(t_output_pth, abnrm_ts_f_pth)
-
-    # TODO: cal t value dev of abnrm ts
+    # preprc.col_total_values(origin_f_pth, output_pth=t_output_pth)
+    # pdc.prediction_t_values(t_output_pth, abnrm_ts_f_pth)
+    deabnrm.detect_t_value(t_output_pth, .000001)
 
     # TODO: collect l1 values
 
