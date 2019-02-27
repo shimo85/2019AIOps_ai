@@ -102,7 +102,7 @@ def col_total_values(origin_data, output_pth=pth.join('rundata', 't_value_output
     t_df.to_csv(t_value_f_pth, columns=['timestamp', 't_value'], index=0)
 
 
-def col_l1_values(origin_data):
+def col_l1_values(origin_data, output_pth=pth.join('rundata', 'l1_value_output'), abnrm_set_f_pth=None):
     print 'start collect level-1 data'
     '''
     output level-1 attribute values to csv
@@ -113,8 +113,7 @@ def col_l1_values(origin_data):
     timestamp, attri_1_item_1_value, attri_1_item_2_value, ...
     
     '''
-    out_pth = pth.join('rundata', 'l1_value_output')
-    utl.reset_dir(out_pth)
+    # utl.reset_dir(out_pth)
 
     data_map = {}
     # attri_df = pd.read_csv(pth.join('rundata', 'check_view_model.csv'), index_col='attri')
@@ -124,11 +123,23 @@ def col_l1_values(origin_data):
         # data_map[attri] = pd.DataFrame(columns=item_set.split('#'))
         data_map[attri] = pd.DataFrame()
 
+    attri_item_set_map = {}
+    if abnrm_set_f_pth:
+        abnrm_set_df = pd.read_csv(abnrm_set_f_pth, index_col='timestamp')
+        for attri in ORIGIN_ATTRIS:
+            attri_item_set_map[attri] = set()
+            for items in abnrm_set_df['{}_abnrm_items'.format(attri)].values:
+                for item in items.split('#'):
+                    attri_item_set_map[attri].add(item)
+
     for timestamp_f in os.listdir(origin_data):
         ts = utl.transfer_file_name_to_timestamp(timestamp_f)
         df = pd.read_csv(pth.join(origin_data, timestamp_f), encoding='utf-8', header=None, names=ORIGIN_COLUMN)
 
         for attri in ORIGIN_ATTRIS:
+            col_items = attri_item_set_map[attri]
+            if col_items:
+                df = df[df[attri].isin(col_items)]
             df_gb = df.groupby(by=attri).agg({'value': sum})
             df_gb_dict = df_gb.to_dict()['value']
             df_gb_dict['timestamp'] = ts
@@ -136,7 +147,7 @@ def col_l1_values(origin_data):
 
     for attri in ORIGIN_ATTRIS:
         data_map[attri] = data_map[attri].sort_values(by='timestamp')
-        data_map[attri].to_csv(pth.join(out_pth, '{}_values.csv'.format(attri)), index=0)
+        data_map[attri].to_csv(pth.join(output_pth, '{}_values.csv'.format(attri)), index=0)
 
     pass
 
@@ -169,6 +180,38 @@ def l1_adf_detector(origin_data):
     print ret_df.head()
     ret_df.to_csv(pth.join(origin_data, 'adf_result.csv'), index=0)
 
+    pass
+
+
+def get_l1_abnormal_set(origin_pth=pth.join('rundata', 'origin_data'),
+                        abnrm_f_pth=pth.join('rundata', 'abnormal_timestamp.csv'),
+                        output_f_pth=pth.join('rundata', 'l1_abnormal_set.csv')):
+    print 'get l1 abnormal set'
+    '''
+    output csv format:
+    timestamp, attri_1_abnrm_items, attri_1_abnrm_items_count, attri_2_abnrm_items, ...
+    1535891100000, i54#i46#i43#i24#i14#i11#i13#i12, 8, ...
+    '''
+    reslt_df = pd.DataFrame()
+
+    abnrm_df = pd.read_csv(abnrm_f_pth)
+    abnrm_ts = abnrm_df['timestamp'].values
+
+    for ts in abnrm_ts:
+        df = pd.read_csv(pth.join(origin_pth, '{}.csv'.format(ts)), header=None, names=ORIGIN_COLUMN)
+        r_dic = dict()
+        r_dic['timestamp'] = ts
+        for attri in ORIGIN_ATTRIS:
+            attri_item_set = df[attri].drop_duplicates().values
+            r_dic['{}_abnrm_items'.format(attri)] = '#'.join(attri_item_set)
+            r_dic['{}_abnrm_items_count'.format(attri)] = len(attri_item_set)
+        reslt_df = reslt_df.append(r_dic, ignore_index=True)
+        # print reslt_df.head()
+        # break
+    if output_f_pth:
+        reslt_df.to_csv(output_f_pth, index=0)
+    else:
+        return reslt_df
     pass
 
 
