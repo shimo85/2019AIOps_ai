@@ -6,22 +6,16 @@ from conf import *
 
 
 def prediction_by_different_classifier(df, abnrm_ts_f_pth=None):
+    X_test = get_abnrm_ts(abnrm_ts_f_pth)
     clf = RandomForestClassifier(max_depth=15, n_estimators=10, max_features=1)
-    # preprocess dataset, split into training and test part
     r_count, _ = df.shape
     X_train = df['timestamp'].values.reshape(-1, 1)
-    # X_train = df.index.values.reshape(-1, 1)
     y_train = df['t_value'].values
     try:
-        # tsc = time.time()
         clf.fit(X_train, y_train)
-        # trc = time.time()
-        if not abnrm_ts_f_pth:
-            return clf.predict(X_train)
-        else:
-            abnrm_ts_df = pd.read_csv(abnrm_ts_f_pth)
-            return clf.predict(abnrm_ts_df['timestamp'].values.reshape(-1, 1))
-            # tac = time.time()
+        X_test = X_train if not abnrm_ts_f_pth else X_test
+        predictions = clf.predict(X_test)
+        return pd.Series(predictions, index=X_test.ravel())
     except Exception, ex:
         print 'Error: %s' % ex.message
 
@@ -53,6 +47,8 @@ def prediction_l1_values(f_path=pth.join('rundata', 'l1_value_output'), abnrm_ts
                 # print df.head()
             except Exception, ex:
                 print 'Error: %s' % ex.message
+        if abnrm_ts_f_pth:
+            df = df.loc[X_test.ravel()]
         df.to_csv(pth.join(f_path, '{}_values_with_pre.csv'.format(attri)))
         # break
     pass

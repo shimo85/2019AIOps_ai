@@ -87,19 +87,20 @@ def desc_check_view():
     pd.DataFrame(data_map).to_csv(pth.join('rundata', 'check_view_model.csv'), index=0)
 
 
-def col_total_values(origin_data, output_pth=pth.join('rundata', 't_value_output')):
+def col_total_values(origin_data, output_pth=pth.join('rundata', 't_value_output', 't_values.csv')):
     print 'start collect total values'
     data_map = {'timestamp': [], 't_value': []}
     for timestamp_f in os.listdir(origin_data):
         ts = utl.transfer_file_name_to_timestamp(timestamp_f)
+        print 'read ts: {}'.format(ts)
         data_map['timestamp'].append(ts)
         df = pd.read_csv(pth.join(origin_data, timestamp_f), encoding='utf-8', header=None, names=ORIGIN_COLUMN)
         data_map['t_value'].append(df['value'].sum())
     t_df = pd.DataFrame(data=data_map).sort_values(by='timestamp')
     # print t_df.head()
     # return ret_list
-    t_value_f_pth = pth.join(output_pth, 't_values.csv')
-    t_df.to_csv(t_value_f_pth, columns=['timestamp', 't_value'], index=0)
+    # t_value_f_pth = pth.join(output_pth, 't_values.csv')
+    t_df.to_csv(output_pth, columns=['timestamp', 't_value'], index=0)
 
 
 def col_l1_values(origin_data, output_pth=pth.join('rundata', 'l1_value_output'), abnrm_set_f_pth=None):
