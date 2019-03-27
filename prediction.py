@@ -121,6 +121,7 @@ def prediction_t_values(f_pth, abnrm_ts_f_pth):
         df.index = pd.to_datetime(df.index, unit='ms')
         df['t_value_pre'] = predictions[df.index]
         df['t_value_pre_dev'] = df['t_value'] - df['t_value_pre']
+        df['t_value_pre_dev_rate'] = df['t_value_pre_dev'] / df['t_value_pre']
 
         # print df.describe()
         df.to_csv(pth.join(f_pth, 't_values_with_pre.csv'))
