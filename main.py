@@ -16,13 +16,13 @@ if __name__ == '__main__':
     # utl.reset_dir(t_output_pth)
     # preprc.col_total_values(origin_f_pth, output_pth=pth.join(t_output_pth, 'origin_t_values.csv'))
     # preprc.col_total_values(test_f_pth, output_pth=pth.join(t_output_pth, 'test_t_values.csv'))
-    pdc.prediction_t_values(t_output_pth, abnrm_ts_f_pth)
+    # pdc.prediction_t_values(t_output_pth, abnrm_ts_f_pth)
     # deabnrm.detect_t_value(t_output_pth, .000001)
 
     l1_output_pth = pth.join(temp_pth, 'l1_value_output')
     # utl.reset_dir(l1_output_pth)
-    # l1_abnrm_set_f_pth = pth.join(l1_output_pth, 'l1_abnormal_set.csv')
-    # preprc.get_l1_abnormal_set(origin_f_pth, abnrm_ts_f_pth, l1_abnrm_set_f_pth)
+    l1_abnrm_set_f_pth = pth.join(l1_output_pth, 'l1_abnormal_set.csv')
+    preprc.get_l1_abnormal_set(test_f_pth, abnrm_ts_f_pth, l1_abnrm_set_f_pth)
     # preprc.col_l1_values(origin_f_pth, l1_output_pth, l1_abnrm_set_f_pth)
     # pdc.prediction_l1_values(l1_output_pth, abnrm_ts_f_pth)
 
