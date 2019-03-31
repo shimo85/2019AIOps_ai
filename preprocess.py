@@ -6,7 +6,7 @@ from statsmodels.tsa.stattools import adfuller
 from conf import *
 
 
-def check_features(origin_data):
+def check_features(origin_data, out_f_pth=pth.join('rundata', 'check_view.csv')):
     print 'check features'
     '''
     output csv:
@@ -35,7 +35,7 @@ def check_features(origin_data):
 
             # break
 
-    out_f_pth = pth.join('rundata', 'check_view.csv')
+    # out_f_pth = pth.join('rundata', 'check_view.csv')
     # print out_data
     # print out_data.keys()
     pd.DataFrame(out_data).sort_values(by='timestamp').to_csv(out_f_pth, index=None)
@@ -146,8 +146,12 @@ def col_l1_values(origin_data, output_pth=pth.join('rundata', 'l1_value_output')
             df_gb_dict['timestamp'] = ts
             data_map[attri] = data_map[attri].append(df_gb_dict, ignore_index=True)
 
+    if not pth.exists(output_pth):
+        os.mkdir(output_pth)
+
     for attri in ORIGIN_ATTRIS:
         data_map[attri] = data_map[attri].sort_values(by='timestamp')
+        data_map[attri].fillna(0, inplace=True)
         data_map[attri].to_csv(pth.join(output_pth, '{}_values.csv'.format(attri)), index=0)
 
     pass
@@ -200,6 +204,7 @@ def get_l1_abnormal_set(origin_pth=pth.join('rundata', 'origin_data'),
 
     for ts in abnrm_ts:
         df = pd.read_csv(pth.join(origin_pth, '{}.csv'.format(ts)), header=None, names=ORIGIN_COLUMN)
+        df = df[df['value'] > 0]
         r_dic = dict()
         r_dic['timestamp'] = ts
         for attri in ORIGIN_ATTRIS:
@@ -213,6 +218,7 @@ def get_l1_abnormal_set(origin_pth=pth.join('rundata', 'origin_data'),
         reslt_df.index = pd.to_datetime(reslt_df['timestamp'], unit='ms')
         reslt_df.drop('timestamp', axis=1, inplace=True)
         # reslt_df.to_csv(output_f_pth, index=0)
+        # reslt_df.fillna(0, inplace=True)
         reslt_df.to_csv(output_f_pth)
     else:
         return reslt_df

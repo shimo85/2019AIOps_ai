@@ -1,3 +1,4 @@
+import os
 import os.path as pth
 import pandas as pd
 import numpy as np
@@ -108,6 +109,34 @@ def get_l1_abnormal_set(item_min_dev_r=.5):
         # break
     # print reslt_df.head()
     reslt_df.sort_values(by='timestamp').to_csv(pth.join('rundata', 'l1_abnormal.csv'), index=0)
+    pass
+
+
+def cal_l1_potential_score(t_value_pre_pth, l1_value_pre_pth, l1_abnml_f_pth, out_pth):
+    if not pth.exists(out_pth):
+        os.mkdir(out_pth)
+    t_df = pd.read_csv(t_value_pre_pth, index_col='timestamp')
+    t_df.index = pd.to_datetime(t_df.index)
+
+    l1_abnml_df = pd.read_csv(l1_abnml_f_pth, index_col='timestamp')
+    l1_abnml_df.index = pd.to_datetime(l1_abnml_df.index)
+
+    for attri in ORIGIN_ATTRIS:
+        l1_df = pd.read_csv(pth.join(l1_value_pre_pth, '{}_values_with_pre.csv'.format(attri)), index_col='timestamp')
+        l1_df.index = pd.to_datetime(l1_df.index)
+
+        df = pd.DataFrame(index=t_df.index)
+
+        items = list()
+
+        for col in l1_df.columns:
+            if col.endswith('_pre_dev'):
+                items.append(col[:-8])
+
+        for item in items:
+            df[item] = l1_df['{}_pre_dev'.format(item)] / t_df['t_value_pre_dev']
+
+        df.to_csv(pth.join(out_pth, '{}_potential_score.csv'.format(attri)))
     pass
 
 

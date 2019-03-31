@@ -1,3 +1,4 @@
+import os
 import os.path as pth
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
@@ -32,28 +33,54 @@ def get_abnrm_ts(abnrm_ts_f_pth=None):
         return abnrm_ts_df['timestamp'].values.reshape(-1, 1)
 
 
-def prediction_l1_values(f_path=pth.join('rundata', 'l1_value_output'), abnrm_ts_f_pth=None):
-    X_test = get_abnrm_ts(abnrm_ts_f_pth)
+def prediction_l1_values(origin_f_pth, test_f_pth, abnrm_ts_f_pth, out_pth):
+    print 'do prediction l1 value'
+
+    anm_df = pd.read_csv(abnrm_ts_f_pth)
+    anm_ts_lst = anm_df['timestamp'].tolist()
+    # anm_ts_lst = pd.to_datetime(anm_df['timestamp'], unit='ms')
+
+    if not pth.exists(out_pth):
+        os.mkdir(out_pth)
 
     for attri in ORIGIN_ATTRIS:
-        df = pd.read_csv(pth.join(f_path, '{}_values.csv'.format(attri)), index_col='timestamp')
+        origin_df = pd.read_csv(pth.join(origin_f_pth, '{}_values.csv'.format(attri)), index_col='timestamp')
+        # origin_df.index = pd.to_datetime(origin_df.index, unit='ms')
+        test_df = pd.read_csv(pth.join(test_f_pth, '{}_values.csv'.format(attri)), index_col='timestamp')
+        # test_df.index = pd.to_datetime(test_df.index, unit='ms')
+
+        df = test_df.loc[anm_ts_lst]
+        df.index = pd.to_datetime(df.index, unit='ms')
+        dta = origin_df.append(test_df)
+        dta.index = pd.to_datetime(dta.index, unit='ms')
+
         for item in df.columns:
-            clf = RandomForestClassifier(max_depth=15, n_estimators=10, max_features=1)
-            item_df = df[item].dropna()
-            X_train = item_df.index.values.reshape(-1, 1)
-            y_train = item_df.values.ravel()
             try:
-                clf.fit(X_train, y_train)
-                X_test = X_train if not abnrm_ts_f_pth else X_test
-                predictions = clf.predict(X_test)
-                # df = df.append(pd.Series(predictions, index=X_test.ravel(), name='{}_prediction'.format(item)))
-                df['{}_prediction'.format(item)] = pd.Series(predictions, index=X_test.ravel())
-                # print df.head()
+                ts = dta[item]
+                print '-' * 8, item, '-' * 8
+                print test_stationarity(ts)
+                size = 12 * 10
+                ts = ts.rolling(window=size).mean()
+                # ts = pd.ewma(ts, span=size)
+                ts.dropna(inplace=True)
+
+                arma_mod = sm.tsa.ARMA(ts, order=(1, 1)).fit(disp=-1, method='css')
+                predictions = arma_mod.predict()
+
+                # predictions = np.exp(predictions)
+                # predictions.dropna(inplace=True)
+
+                ts = ts[predictions.index]
+
+                print '{} {} RMSE: {}'.format(attri, item, rmse(predictions, ts))
+
+                df['{}_pre'.format(item)] = predictions[df.index]
+                df['{}_pre_dev'.format(item)] = df[item] - df['{}_pre'.format(item)]
+                df['{}_pre_dev_rate'.format(item)] = df['{}_pre_dev'.format(item)] / df['{}_pre'.format(item)]
             except Exception, ex:
                 print 'Error: %s' % ex.message
-        if abnrm_ts_f_pth:
-            df = df.loc[X_test.ravel()]
-        df.to_csv(pth.join(f_path, '{}_values_with_pre.csv'.format(attri)))
+            # break
+        df.to_csv(pth.join(out_pth, '{}_values_with_pre.csv'.format(attri)))
         # break
     pass
 
