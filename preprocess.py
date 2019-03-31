@@ -215,8 +215,8 @@ def get_l1_abnormal_set(origin_pth=pth.join('rundata', 'origin_data'),
         # print reslt_df.head()
         # break
     if output_f_pth:
-        reslt_df.index = pd.to_datetime(reslt_df['timestamp'], unit='ms')
-        reslt_df.drop('timestamp', axis=1, inplace=True)
+        # reslt_df.index = pd.to_datetime(reslt_df['timestamp'], unit='ms')
+        # reslt_df.drop('timestamp', axis=1, inplace=True)
         # reslt_df.to_csv(output_f_pth, index=0)
         # reslt_df.fillna(0, inplace=True)
         reslt_df.to_csv(output_f_pth)

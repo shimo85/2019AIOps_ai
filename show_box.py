@@ -134,6 +134,17 @@ def check_attri_after():
     pass
 
 
+def show_insight(f_pth):
+    insight_df = pd.read_csv(f_pth, index_col='thr')
+    plt.figure()
+    plt.title(pth.basename(f_pth))
+    for col in insight_df.columns:
+        insight_df[col].plot()
+    plt.legend()
+    plt.show()
+    pass
+
+
 if __name__ == '__main__':
     # show_t_values(save_path=pth.join('datapic', 't_values.png'))
     # show_t_values(is_show_pre=True, save_path=pth.join('datapic', 't_values_pre.png'))
@@ -145,7 +156,8 @@ if __name__ == '__main__':
     # show_check_view_model(save_path=pth.join('datapic', 'check_view_model.png'))
 
     # show_l1_abnrm(save_path=pth.join('datapic', 'l1_abnormal.png'))
+    show_insight(pth.join('rundata', 'temp', 'l1_value_output', 'l1_insight.csv'))
 
-    check_attri_after()
+    # check_attri_after()
 
     pass

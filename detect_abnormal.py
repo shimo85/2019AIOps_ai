@@ -116,14 +116,14 @@ def cal_l1_potential_score(t_value_pre_pth, l1_value_pre_pth, l1_abnml_f_pth, ou
     if not pth.exists(out_pth):
         os.mkdir(out_pth)
     t_df = pd.read_csv(t_value_pre_pth, index_col='timestamp')
-    t_df.index = pd.to_datetime(t_df.index)
+    # t_df.index = pd.to_datetime(t_df.index)
 
     l1_abnml_df = pd.read_csv(l1_abnml_f_pth, index_col='timestamp')
-    l1_abnml_df.index = pd.to_datetime(l1_abnml_df.index)
+    # l1_abnml_df.index = pd.to_datetime(l1_abnml_df.index)
 
     for attri in ORIGIN_ATTRIS:
         l1_df = pd.read_csv(pth.join(l1_value_pre_pth, '{}_values_with_pre.csv'.format(attri)), index_col='timestamp')
-        l1_df.index = pd.to_datetime(l1_df.index)
+        # l1_df.index = pd.to_datetime(l1_df.index)
 
         df = pd.DataFrame(index=t_df.index)
 

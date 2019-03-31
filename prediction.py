@@ -50,9 +50,9 @@ def prediction_l1_values(origin_f_pth, test_f_pth, abnrm_ts_f_pth, out_pth):
         # test_df.index = pd.to_datetime(test_df.index, unit='ms')
 
         df = test_df.loc[anm_ts_lst]
-        df.index = pd.to_datetime(df.index, unit='ms')
+        # df.index = pd.to_datetime(df.index, unit='ms')
         dta = origin_df.append(test_df)
-        dta.index = pd.to_datetime(dta.index, unit='ms')
+        # dta.index = pd.to_datetime(dta.index, unit='ms')
 
         for item in df.columns:
             try:
@@ -118,7 +118,7 @@ def prediction_t_values(f_pth, abnrm_ts_f_pth):
 
         dta = origin_df.append(test_df)
         # df = dta
-        dta.index = pd.to_datetime(dta.index, unit='ms')
+        # dta.index = pd.to_datetime(dta.index, unit='ms')
         ts = dta['t_value']
         print test_stationarity(ts)
 
@@ -145,7 +145,7 @@ def prediction_t_values(f_pth, abnrm_ts_f_pth):
         # print predictions
         # print df.head()
 
-        df.index = pd.to_datetime(df.index, unit='ms')
+        # df.index = pd.to_datetime(df.index, unit='ms')
         df['t_value_pre'] = predictions[df.index]
         df['t_value_pre_dev'] = df['t_value'] - df['t_value_pre']
         df['t_value_pre_dev_rate'] = df['t_value_pre_dev'] / df['t_value_pre']

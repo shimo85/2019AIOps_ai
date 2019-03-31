@@ -5,15 +5,16 @@ import prediction as pdc
 import detect_abnormal as deabnrm
 import pandas as pd
 from conf import *
+import matplotlib.pyplot as plt
+import dateutil.parser as dateparser
+import time
 
 
-def l1_generate_result(l1_abnrm_set_f_pth, ps_pth, output_pth):
+def l1_generate_result(l1_abnrm_set_f_pth, ps_pth, output_pth, thr):
     abnrm_df = pd.read_csv(l1_abnrm_set_f_pth, index_col='timestamp')
     abnrm_df.index = pd.to_datetime(abnrm_df.index)
 
     df = pd.DataFrame()
-
-    thr = 0.5
 
     for attri in ORIGIN_ATTRIS:
         attri_df = pd.read_csv(pth.join(ps_pth, '{}_potential_score.csv'.format(attri)), index_col='timestamp')
@@ -25,7 +26,36 @@ def l1_generate_result(l1_abnrm_set_f_pth, ps_pth, output_pth):
 
     # print df.head()
     df.to_csv(output_pth)
-    pass
+    return df
+
+
+def check_l1_ret(l1_ret_f_pth):
+    df = pd.read_csv(l1_ret_f_pth, index_col='timestamp')
+    total_size, _ = df.shape
+    # print 'total size: ', total_size
+    df.dropna(how='all', inplace=True)
+    not_na_row, _ = df.shape
+    na_size = total_size - not_na_row
+    # print 'na size: ', na_size
+    df = df.applymap(lambda r: True if '#' in str(r) else None)
+    df.dropna(how='all', inplace=True)
+    complex_size, _ = df.shape
+    else_size = total_size - na_size - complex_size
+    return total_size, na_size, complex_size, else_size
+
+
+def insight_l1_ret(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, out_pth):
+    insight_df = pd.DataFrame()
+    for i in range(1, 10):
+        thr = i / 10.
+        l1_generate_result(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, thr=thr)
+        # print '-' * 8, '\t', thr, '\t', '-' * 8
+        # total, na, complex_s, else_size = insight_l1_ret(l1_ret_f_pth)
+        s = pd.Series(check_l1_ret(l1_ret_f_pth), index=['total_size', 'na_size', 'complex_size', 'else_size'],
+                      name=thr)
+        insight_df = insight_df.append(s)
+    # print insight_df.head()
+    insight_df.to_csv(out_pth, index_label='thr')
 
 
 if __name__ == '__main__':
@@ -34,29 +64,42 @@ if __name__ == '__main__':
     abnrm_ts_f_pth = pth.join('rundata', 'Anomalytime_data_test1.csv')
 
     temp_pth = pth.join('rundata', 'temp')
-    # utl.reset_dir(temp_pth)
+    utl.reset_dir(temp_pth)
 
     t_output_pth = pth.join(temp_pth, 't_value_output')
-    # utl.reset_dir(t_output_pth)
-    # preprc.col_total_values(origin_f_pth, output_pth=pth.join(t_output_pth, 'origin_t_values.csv'))
-    # preprc.col_total_values(test_f_pth, output_pth=pth.join(t_output_pth, 'test_t_values.csv'))
-    # pdc.prediction_t_values(t_output_pth, abnrm_ts_f_pth)
+    utl.reset_dir(t_output_pth)
+    preprc.col_total_values(origin_f_pth, output_pth=pth.join(t_output_pth, 'origin_t_values.csv'))
+    preprc.col_total_values(test_f_pth, output_pth=pth.join(t_output_pth, 'test_t_values.csv'))
+    pdc.prediction_t_values(t_output_pth, abnrm_ts_f_pth)
 
     l1_output_pth = pth.join(temp_pth, 'l1_value_output')
-    # utl.reset_dir(l1_output_pth)
+    utl.reset_dir(l1_output_pth)
     l1_abnrm_set_f_pth = pth.join(l1_output_pth, 'l1_abnormal_set.csv')
-    # preprc.get_l1_abnormal_set(test_f_pth, abnrm_ts_f_pth, l1_abnrm_set_f_pth)
+    preprc.get_l1_abnormal_set(test_f_pth, abnrm_ts_f_pth, l1_abnrm_set_f_pth)
     l1_origin_data = pth.join(l1_output_pth, 'origin')
-    # preprc.col_l1_values(origin_f_pth, l1_origin_data, l1_abnrm_set_f_pth)
+    preprc.col_l1_values(origin_f_pth, l1_origin_data, l1_abnrm_set_f_pth)
     l1_test_data = pth.join(l1_output_pth, 'test')
-    # preprc.col_l1_values(test_f_pth, l1_test_data, l1_abnrm_set_f_pth)
+    preprc.col_l1_values(test_f_pth, l1_test_data, l1_abnrm_set_f_pth)
     l1_pre = pth.join(l1_output_pth, 'pre')
-    # pdc.prediction_l1_values(l1_origin_data, l1_test_data, abnrm_ts_f_pth, l1_pre)
+    pdc.prediction_l1_values(l1_origin_data, l1_test_data, abnrm_ts_f_pth, l1_pre)
     l1_ps_pth = pth.join(l1_output_pth, 'potential_score')
-    # deabnrm.cal_l1_potential_score(pth.join(t_output_pth, 't_values_with_pre.csv'), l1_pre, l1_abnrm_set_f_pth,
-    #                                l1_ps_pth)
+    deabnrm.cal_l1_potential_score(pth.join(t_output_pth, 't_values_with_pre.csv'), l1_pre, l1_abnrm_set_f_pth,
+                                   l1_ps_pth)
     l1_ret_f_pth = pth.join(l1_output_pth, 'l1_result.csv')
-    l1_generate_result(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth)
+    out_pth = pth.join(l1_output_pth, 'l1_insight.csv')
+    insight_l1_ret(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, out_pth)
+
+    l1_ret_not_na_df = l1_generate_result(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, thr=.5)
+    # l1_ret_less_complex_df = l1_generate_result(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, thr=.8)
+
+    final_ret_df = pd.DataFrame()
+    # print l1_ret_not_na_df.index
+    final_ret_df['d_timestamp'] = l1_ret_not_na_df.index
+    # final_ret_df['timestamp'] = final_ret_df['d_timestamp'].apply(
+    #     lambda r: (int(time.mktime(dateparser.parse(r).timetuple()))) * 1000)
+    # final_ret_df['td_timestamp'] = pd.to_datetime(final_ret_df['timestamp'], unit='ms')
+    # final_ret_df['set']
+    print final_ret_df.head()
 
     # TODO:
 
