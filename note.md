@@ -30,3 +30,11 @@ Precision ＝ TP / (TP + FP)，
 Recall = TP / (TP + FN)。
 
 每个异常时刻都有一个真正的根因集合，记为S*，该集合中包含一个或多个属性值组合，参赛队伍的算法输出结果 记为S。对于S*中的每一个元素，S中包含其中一个，则算一次true positive （TP），遗漏一个算一次false negative （FN），多出一个S*中不存在的，记一次false positive （FP）。计算出所有异常时刻的F-score，求其平均值得到全局的F-score。
+
+## TODO List
+
+### output result and upload
+
+### sampling normal 200
+
+### LWM algorithm
