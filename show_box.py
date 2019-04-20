@@ -95,7 +95,8 @@ def show_t_value(save_path=pth.join('datapic', 't_values_anm.png')):
     output_pth = pth.join('rundata', 'temp', 't_value_output')
     origin_df = pd.read_csv(pth.join(output_pth, 'origin_t_values.csv'), index_col='timestamp')
     test_df = pd.read_csv(pth.join(output_pth, 'test_t_values.csv'), index_col='timestamp')
-    anm_df = pd.read_csv(pth.join('rundata', 'Anomalytime_data_test1.csv'))
+    # anm_df = pd.read_csv(pth.join('rundata', 'Anomalytime_data_test1.csv'))
+    anm_df = pd.read_csv(pth.join('rundata', 'Anomalytime_data_test2.csv'))
     df = origin_df.append(test_df)
     # df = test_df
     df['anm'] = 0
@@ -149,7 +150,7 @@ if __name__ == '__main__':
     # show_t_values(save_path=pth.join('datapic', 't_values.png'))
     # show_t_values(is_show_pre=True, save_path=pth.join('datapic', 't_values_pre.png'))
     # show_t_value_abnormal(save_path=pth.join('datapic', 't_values_dev.png'))
-    # show_t_value()
+    show_t_value()
 
     # show_check_view_count(save_path=pth.join('datapic', 'check_view_count.png'))
     # show_check_view(save_path=pth.join('datapic', 'check_view.png'))

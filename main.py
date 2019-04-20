@@ -110,22 +110,13 @@ if __name__ == '__main__':
     # l1_ret_less_complex_df = l1_generate_result(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, thr=.8)
     l1_ret_less_complex_df = l1_generate_result(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, thr=1.)
 
-    # l1_ret_not_na_df['set'] = l1_ret_not_na_df.apply(ret_to_set, axis=1)
-
-    # print l1_ret_not_na_df['set'].head()
-
     final_ret_df = pd.DataFrame()
-    # print l1_ret_not_na_df.index
-    # final_ret_df['timestamp'] = l1_ret_not_na_df.index
+
+    # final_ret_df['set'] = l1_ret_not_na_df.apply(ret_to_set, axis=1)
     final_ret_df['set'] = l1_ret_less_complex_df.apply(ret_to_set, axis=1)
     na_index = final_ret_df[final_ret_df['set'].isna()].index
     print na_index
     final_ret_df['set'].update(l1_ret_not_na_df.loc[na_index].apply(ret_to_set, axis=1))
-    # final_ret_df['timestamp'] = final_ret_df['d_timestamp'].apply(
-    #     lambda r: (int(time.mktime(dateparser.parse(r).timetuple()))) * 1000)
-    # final_ret_df['td_timestamp'] = pd.to_datetime(final_ret_df['timestamp'], unit='ms')
-    # final_ret_df['set']
-    # print final_ret_df.head()
     final_ret_df.to_csv(final_ret_f_pth)
 
     pass
