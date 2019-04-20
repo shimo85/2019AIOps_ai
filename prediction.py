@@ -58,7 +58,7 @@ def prediction_l1_values(origin_f_pth, test_f_pth, abnrm_ts_f_pth, out_pth):
             try:
                 ts = dta[item]
                 print '-' * 8, item, '-' * 8
-                print test_stationarity(ts)
+                # print test_stationarity(ts)
                 size = 12 * 10
                 ts = ts.rolling(window=size).mean()
                 # ts = pd.ewma(ts, span=size)

@@ -25,7 +25,7 @@ def l1_generate_result(l1_abnrm_set_f_pth, ps_pth, output_pth, thr):
         # break
 
     # print df.head()
-    if pth.exists(out_pth):
+    if output_pth:
         df.to_csv(output_pth)
     return df
 
@@ -47,7 +47,8 @@ def check_l1_ret(l1_ret_f_pth):
 
 def insight_l1_ret(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, out_pth):
     insight_df = pd.DataFrame()
-    for i in range(1, 10):
+    # for i in range(1, 10):
+    for i in range(1, 15):
         thr = i / 10.
         l1_generate_result(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, thr=thr)
         # print '-' * 8, '\t', thr, '\t', '-' * 8
@@ -72,9 +73,11 @@ def ret_to_set(row):
 
 if __name__ == '__main__':
     origin_f_pth = pth.join('rundata', 'origin_data')
-    test_f_pth = pth.join('rundata', 'test_data')
+    # test_f_pth = pth.join('rundata', 'test1_data')
+    test_f_pth = pth.join('rundata', 'test2_data')
     # abnrm_ts_f_pth = pth.join('rundata', 'Anomalytime_data_test1.csv')
-    abnrm_ts_f_pth = pth.join('rundata', 'anomaly_times_from_verify.csv')
+    abnrm_ts_f_pth = pth.join('rundata', 'Anomalytime_data_test2.csv')
+    # abnrm_ts_f_pth = pth.join('rundata', 'anomaly_times_from_verify.csv')
 
     temp_pth = pth.join('rundata', 'temp')
     # utl.reset_dir(temp_pth)
@@ -89,42 +92,40 @@ if __name__ == '__main__':
     l1_output_pth = pth.join(temp_pth, 'l1_value_output')
     # utl.reset_dir(l1_output_pth)
     l1_abnrm_set_f_pth = pth.join(l1_output_pth, 'l1_abnormal_set.csv')
-    preprc.get_l1_abnormal_set(test_f_pth, abnrm_ts_f_pth, l1_abnrm_set_f_pth)
+    # preprc.get_l1_abnormal_set(test_f_pth, abnrm_ts_f_pth, l1_abnrm_set_f_pth)
     l1_origin_data = pth.join(l1_output_pth, 'origin')
-    preprc.col_l1_values(origin_f_pth, l1_origin_data, l1_abnrm_set_f_pth)
+    # preprc.col_l1_values(origin_f_pth, l1_origin_data, l1_abnrm_set_f_pth)
     l1_test_data = pth.join(l1_output_pth, 'test')
-    preprc.col_l1_values(test_f_pth, l1_test_data, l1_abnrm_set_f_pth)
+    # preprc.col_l1_values(test_f_pth, l1_test_data, l1_abnrm_set_f_pth)
     l1_pre = pth.join(l1_output_pth, 'pre')
-    pdc.prediction_l1_values(l1_origin_data, l1_test_data, abnrm_ts_f_pth, l1_pre)
+    # pdc.prediction_l1_values(l1_origin_data, l1_test_data, abnrm_ts_f_pth, l1_pre)
     l1_ps_pth = pth.join(l1_output_pth, 'potential_score')
-    deabnrm.cal_l1_potential_score(pth.join(t_output_pth, 't_values_with_pre.csv'), l1_pre, l1_abnrm_set_f_pth,
-                                   l1_ps_pth)
+    # deabnrm.cal_l1_potential_score(pth.join(t_output_pth, 't_values_with_pre.csv'), l1_pre, l1_abnrm_set_f_pth,
+    #                                l1_ps_pth)
     l1_ret_f_pth = pth.join(l1_output_pth, 'l1_result.csv')
     out_pth = pth.join(l1_output_pth, 'l1_insight.csv')
-    insight_l1_ret(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, out_pth)
+    # insight_l1_ret(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, out_pth)
 
-    # l1_ret_not_na_df = l1_generate_result(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, thr=.5)
+    l1_ret_not_na_df = l1_generate_result(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, thr=.5)
     # l1_ret_less_complex_df = l1_generate_result(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, thr=.8)
-    #
-    # # l1_ret_not_na_df['set'] = l1_ret_not_na_df.apply(ret_to_set, axis=1)
-    #
-    # # print l1_ret_not_na_df['set'].head()
-    #
-    # final_ret_df = pd.DataFrame()
-    # # print l1_ret_not_na_df.index
-    # # final_ret_df['timestamp'] = l1_ret_not_na_df.index
-    # final_ret_df['set'] = l1_ret_less_complex_df.apply(ret_to_set, axis=1)
-    # na_index = final_ret_df[final_ret_df['set'].isna()].index
-    # print na_index
-    # final_ret_df['set'].update(l1_ret_not_na_df.loc[na_index].apply(ret_to_set, axis=1))
-    # # final_ret_df['timestamp'] = final_ret_df['d_timestamp'].apply(
-    # #     lambda r: (int(time.mktime(dateparser.parse(r).timetuple()))) * 1000)
-    # # final_ret_df['td_timestamp'] = pd.to_datetime(final_ret_df['timestamp'], unit='ms')
-    # # final_ret_df['set']
-    # # print final_ret_df.head()
-    # final_ret_df.to_csv(final_ret_f_pth)
+    l1_ret_less_complex_df = l1_generate_result(l1_abnrm_set_f_pth, l1_ps_pth, l1_ret_f_pth, thr=1.)
 
-    # TODO:
+    # l1_ret_not_na_df['set'] = l1_ret_not_na_df.apply(ret_to_set, axis=1)
 
+    # print l1_ret_not_na_df['set'].head()
+
+    final_ret_df = pd.DataFrame()
+    # print l1_ret_not_na_df.index
+    # final_ret_df['timestamp'] = l1_ret_not_na_df.index
+    final_ret_df['set'] = l1_ret_less_complex_df.apply(ret_to_set, axis=1)
+    na_index = final_ret_df[final_ret_df['set'].isna()].index
+    print na_index
+    final_ret_df['set'].update(l1_ret_not_na_df.loc[na_index].apply(ret_to_set, axis=1))
+    # final_ret_df['timestamp'] = final_ret_df['d_timestamp'].apply(
+    #     lambda r: (int(time.mktime(dateparser.parse(r).timetuple()))) * 1000)
+    # final_ret_df['td_timestamp'] = pd.to_datetime(final_ret_df['timestamp'], unit='ms')
+    # final_ret_df['set']
+    # print final_ret_df.head()
+    final_ret_df.to_csv(final_ret_f_pth)
 
     pass

@@ -135,6 +135,7 @@ def col_l1_values(origin_data, output_pth=pth.join('rundata', 'l1_value_output')
 
     for timestamp_f in os.listdir(origin_data):
         ts = utl.transfer_file_name_to_timestamp(timestamp_f)
+        print 'ts: {}'.format(ts)
         df = pd.read_csv(pth.join(origin_data, timestamp_f), encoding='utf-8', header=None, names=ORIGIN_COLUMN)
 
         for attri in ORIGIN_ATTRIS:

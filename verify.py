@@ -9,7 +9,7 @@ ts_list = list()
 # for f in os.listdir(f_pth):
 #     ts_list.append([utl.transfer_file_name_to_timestamp(f), pth.join(f_pth, f)])
 
-f_pth = pth.join('rundata', 'test_data')
+f_pth = pth.join('rundata', 'test1_data')
 for f in os.listdir(f_pth):
     ts_list.append([utl.transfer_file_name_to_timestamp(f), pth.join(f_pth, f)])
 
